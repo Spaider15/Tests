@@ -3,10 +3,17 @@
  */
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import FilmItem from './FilmItem';
+
+interface IFilm {
+    name: string;
+}
 
 interface IState {
     loading: boolean;
-    data?: string;
+    data?: {
+        films: Array<IFilm>;
+    };
 }
 
 class Main extends React.Component<{}, IState> {
@@ -21,19 +28,21 @@ class Main extends React.Component<{}, IState> {
       if (this.state.loading) {
           return(<h1>Loading...</h1>);
       } else {
-          return(<h1>{JSON.stringify(this.state.data)}</h1>);
+          const films = this.state.data ? this.state.data.films.map((film, key) =>
+              <li key={key}><FilmItem name={film.name}/></li>) : [];
+          return(<ul>{films}</ul>);
       }
     }
     public async componentDidMount() {
         const query = `query q1{                        viewer(
-              accessToken:"d8b1408f130778d35d28872fc9a6984d"){
-                film(id:885316){
-                  name
-                }
-              }
-            }`;
+          accessToken:"d8b1408f130778d35d28872fc9a6984d"){
+            films{
+              name
+            }
+          }
+        }`;
         const data = await this.query(query);
-        this.setState({ loading: false, data });
+        this.setState({ loading: false, data: data.viewer });
     }
 
     private async query(query: string) {
