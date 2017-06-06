@@ -19,17 +19,17 @@
 
     public render() {
         if (this.state.loading) {
-            return (<Route exact path="/Tests/" render={() => (<h1>Loading...</h1>)}/>);
+            return (<Route exact path="/" render={() => (<h1>Loading...</h1>)}/>);
         }
         if (this.state.data) {
             return (
                     <div>
                         <FilmsView data={this.state.data} />
-                        <Route path="/Tests/film/:filmId" key="film" component={FilmItem}/>
+                        <Route path="/film/:filmId" key="film" component={FilmItem}/>
                     </div>
             );
         } else {
-            return (<Route exact path="/Tests/" render={() => (<h1>data is empty</h1>)}/>);
+            return (<Route exact path="/" render={() => (<h1>data is empty</h1>)}/>);
         }
     }
     public async componentDidMount() {
