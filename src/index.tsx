@@ -3,7 +3,7 @@
  */
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import Main from './Films';
+import Main from "./App";
 
 ReactDOM.render(
     <Main />,
