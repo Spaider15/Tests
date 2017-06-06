@@ -10,7 +10,8 @@ export default (props: IProps) => {
     return (
         <div>
             <h1>{film.name}</h1>
-            <div>Описание: {film.description}</div>
+            <div dangerouslySetInnerHTML={{__html: `Описание: ${film.description}`}} />
+            <br/>
             <div>Страна: {film.country.name}</div>
             <div>Режисер: {film.director.name}</div>
             <div>Год: {film.year}</div>
