@@ -10,7 +10,7 @@ export default class App extends React.Component<{}, {}> {
     }
     public render() {
         return(
-            <Router basename="/Tests/">
+            <Router>
                 <Films />
             </Router>
         );
