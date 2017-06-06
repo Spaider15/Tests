@@ -1,4 +1,9 @@
 import * as React from "react";
+import {
+    BrowserRouter as Router,
+    Link,
+    Route,
+} from "react-router-dom";
 import { FilmItem, IFilm  } from "./FilmItem";
 
 interface IState {
@@ -18,11 +23,26 @@ export default class Main extends React.Component<{}, IState> {
 
     public render() {
         if (this.state.loading) {
-            return(<h1>Loading...</h1>);
+            return (<h1>Loading...</h1>);
+        }
+        if (this.state.data) {
+            const data = this.state.data;
+            const films = data.films.map((film: IFilm, key) =>
+                <li key={key}><Link to={film.name}>{film.name}</Link></li>);
+            const routes = [];
+            routes.push(<Route exact path="/" render={() => (<ul>{films}</ul>)}/>);
+            routes.push(...data.films.map((film: IFilm, key) =>
+                    <Route path={"/" + film.name} render={() =>
+                    (<div><h1>{film.name}</h1><span>{film.description}</span></div>)}/>));
+            return (
+                <Router>
+                    <div>
+                        {routes}
+                    </div>
+                </Router>
+            );
         } else {
-            const films = this.state.data ? this.state.data.films.map((film: IFilm, key) =>
-                <li key={key}><FilmItem film={film}/></li>) : [];
-            return(<ul>{films}</ul>);
+            return (<div>Data is empty</div>);
         }
     }
     public async componentDidMount() {
