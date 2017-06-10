@@ -26,6 +26,10 @@ export interface IData {
 export interface IFilmsState {
     loading: boolean;
     data?: IData;
+    filter: {
+        limit: number,
+        genre?: number[][],
+    };
 }
 
 export interface IFilmItemState {

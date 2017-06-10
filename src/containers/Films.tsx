@@ -4,16 +4,29 @@
     Route,
 } from "react-router-dom";
  import FilmsView from "../components/FilmsView";
- import Genres from "../components/Genres";
+ import GenresFilter from "../components/GenresFilter";
  import { queryToAPI } from "../helpers";
  import { IFilmsState } from "../types";
  import FilmItem from "./FilmItem";
+
+ const styles = {
+     filmsList: {
+       float: "left",
+     },
+     filter: {
+        marginLeft: "50px",
+        float: "left",
+     },
+ };
 
  export default class Films extends React.Component<{}, IFilmsState> {
     constructor(props: any) {
         super(props);
         this.state = {
             loading : true,
+            filter: {
+                limit: 10,
+            },
         };
     }
 
@@ -24,9 +37,14 @@
         if (this.state.data) {
             return (
                     <div>
-                        <h2>Список фильмов:</h2>
-                        <FilmsView data={this.state.data} />
-                        <Genres genres={this.state.data.genres} />
+                        <div style={styles.filmsList}>
+                            <h2>Список фильмов:</h2>
+                            <FilmsView data={this.state.data} />
+                        </div>
+                        <div style={styles.filter}>
+                            <h2>Фильтр:</h2>
+                            <GenresFilter setFilter={this.setGenreFilter.bind(this)} genres={this.state.data.genres} />
+                        </div>
                         <Route path="/film/:filmId" key="film" component={FilmItem}/>
                     </div>
             );
@@ -35,9 +53,20 @@
         }
     }
     public async componentDidMount() {
+        await this.getFilms();
+    }
+    private setGenreFilter(value: number[][]) {
+        const filter = this.state.filter;
+        filter.genre = value;
+        this.setState({ filter });
+        this.getFilms();
+    }
+    private async getFilms() {
+        const filter = this.state.filter;
+        console.log(filter);
         const query = `query q1{                        viewer(
           accessToken:"d8b1408f130778d35d28872fc9a6984d"){
-            films(limit:10){
+            films(limit:${filter.limit}, ${filter.genre ? `genres: {or: [[${filter.genre}]]}` : ""}){
               name
               id
             }
@@ -51,4 +80,3 @@
         this.setState({ loading: false, data: data.viewer });
     }
 }
-
