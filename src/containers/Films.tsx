@@ -4,6 +4,7 @@
     Route,
 } from "react-router-dom";
  import FilmsView from "../components/FilmsView";
+ import Genres from "../components/Genres";
  import { queryToAPI } from "../helpers";
  import { IFilmsState } from "../types";
  import FilmItem from "./FilmItem";
@@ -23,7 +24,9 @@
         if (this.state.data) {
             return (
                     <div>
+                        <h2>Список фильмов:</h2>
                         <FilmsView data={this.state.data} />
+                        <Genres genres={this.state.data.genres} />
                         <Route path="/film/:filmId" key="film" component={FilmItem}/>
                     </div>
             );
@@ -37,6 +40,10 @@
             films(limit:10){
               name
               id
+            }
+            genres {
+               id
+               name
             }
           }
         }`;

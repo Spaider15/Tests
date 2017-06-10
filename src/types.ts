@@ -13,8 +13,14 @@ export interface IFilm {
     director: { name: string };
 }
 
+export interface IGenre {
+    id: string;
+    name: string;
+}
+
 export interface IData {
     films: IFilm[];
+    genres: IGenre[];
 }
 
 export interface IFilmsState {
