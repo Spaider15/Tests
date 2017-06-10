@@ -37,14 +37,19 @@
         if (this.state.data) {
             return (
                     <div>
-                        <div style={styles.filmsList}>
-                            <h2>Список фильмов:</h2>
-                            <FilmsView data={this.state.data} />
-                        </div>
-                        <div style={styles.filter}>
-                            <h2>Фильтр:</h2>
-                            <GenresFilter setFilter={this.setGenreFilter.bind(this)} genres={this.state.data.genres} />
-                        </div>
+                        <Route exact path="/" key="main" render={() => (
+                            <div>
+                                <div style={styles.filmsList}>
+                                    <h2>Список фильмов:</h2>
+                                    <FilmsView data={this.state.data} />
+                                </div>
+                                <div style={styles.filter}>
+                                    <h2>Фильтр:</h2>
+                                    <GenresFilter setFilter={this.setGenreFilter.bind(this)}
+                                                  genres={this.state.data ? this.state.data.genres : undefined} />
+                                </div>
+                            </div>
+                        )}/>
                         <Route path="/film/:filmId" key="film" component={FilmItem}/>
                     </div>
             );

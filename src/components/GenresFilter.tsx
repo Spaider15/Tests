@@ -2,7 +2,7 @@ import * as React from "react";
 import { IGenre } from "../types";
 
 interface IProps {
-    genres: IGenre[];
+    genres?: IGenre[];
     setFilter: (value: number[][]) => void;
 }
 
@@ -11,7 +11,7 @@ export default class Genres extends React.Component<IProps, {}> {
         super(props);
     }
     public render() {
-        const genres = this.props.genres;
+        const genres = this.props.genres || [];
         const genresList = genres.map( (genre, key) => {
             return (<option value={genre.id} key={genre.id}>{genre.name}</option>);
         });
