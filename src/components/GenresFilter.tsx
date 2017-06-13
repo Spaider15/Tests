@@ -1,5 +1,6 @@
 import * as React from "react";
 import { IGenre } from "../types";
+import {EventHandler} from "react";
 
 interface IProps {
     genres?: IGenre[];
@@ -20,16 +21,24 @@ export default class Genres extends React.Component<IProps, {}> {
             <div>
                 <div>Выберите жанр:</div>
                 <br />
-                <select onChange={this.onChange.bind(this)}>
+                <select multiple={true} onChange={this.onChange.bind(this)}>
                     <option value="">Выберите жанр</option>
                     {genresList}</select>
             </div>
         );
     }
-    private onChange(event: any) {
-        if (!event.target.value) {
+    private onChange(event: React.FormEvent<HTMLSelectElement>) {
+        const target = event.currentTarget;
+        const options = target.options;
+        const values = [];
+        for (let i = 0, l = options.length; i < l; i++) {
+            if (options[i].selected && +options[i].value !== 0) {
+                values.push(+options[i].value);
+            }
+        }
+        if (values.length < 1) {
             return;
         }
-        this.props.setFilter([[+event.target.value]]);
+        this.props.setFilter([values]);
     }
 }
