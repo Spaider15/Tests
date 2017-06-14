@@ -1,10 +1,10 @@
 import * as React from "react";
 import { IGenre } from "../types";
-import {EventHandler} from "react";
 
 interface IProps {
     genres?: IGenre[];
-    setFilter: (value: number[][]) => void;
+    setFilter: (value: number[], key: number) => void;
+    id: number;
 }
 
 export default class Genres extends React.Component<IProps, {}> {
@@ -14,20 +14,19 @@ export default class Genres extends React.Component<IProps, {}> {
     public render() {
         const genres = this.props.genres || [];
         const genresList = genres.map( (genre, key) => {
-            return (<option value={genre.id} key={genre.id}>{genre.name}</option>);
+            return (<option key={key} value={genre.id} id={genre.id}>{genre.name}</option>);
         });
 
         return(
             <div>
-                <div>Выберите жанр:</div>
-                <br />
-                <select multiple={true} onChange={this.onChange.bind(this)}>
+                <select multiple={true} onChange={this.onChangeFilter.bind(this)}>
                     <option value="">Выберите жанр</option>
-                    {genresList}</select>
+                    {genresList}
+                </select>
             </div>
         );
     }
-    private onChange(event: React.FormEvent<HTMLSelectElement>) {
+    private onChangeFilter(event: React.FormEvent<HTMLSelectElement>) {
         const target = event.currentTarget;
         const options = target.options;
         const values = [];
@@ -39,6 +38,6 @@ export default class Genres extends React.Component<IProps, {}> {
         if (values.length < 1) {
             return;
         }
-        this.props.setFilter([values]);
+        this.props.setFilter(values, this.props.id);
     }
 }

@@ -4,7 +4,7 @@
     Route,
 } from "react-router-dom";
  import FilmsView from "../components/FilmsView";
- import GenresFilter from "../components/GenresFilter";
+ import GenresFilter from "../containers/GenresFilter";
  import { queryToAPI } from "../helpers";
  import { IFilmsState } from "../types";
  import FilmItem from "./FilmItem";
@@ -24,8 +24,12 @@
         super(props);
         this.state = {
             loading : true,
+            loadingFilter: false,
             filter: {
                 limit: 10,
+                1: [],
+                2: [],
+                3: [],
             },
         };
     }
@@ -41,7 +45,8 @@
                             <div>
                                 <div style={styles.filmsList}>
                                     <h2>Список фильмов:</h2>
-                                    <FilmsView data={this.state.data} />
+                                    {this.state.loadingFilter ? <h3>Loading...</h3> :
+                                        <FilmsView data={this.state.data} />}
                                 </div>
                                 <div style={styles.filter}>
                                     <h2>Фильтр:</h2>
@@ -60,18 +65,17 @@
     public async componentDidMount() {
         await this.getFilms();
     }
-    private setGenreFilter(value: number[][]) {
+    private setGenreFilter(filter1: number[], filter2: number[], filter3: number[]) {
         const filter = this.state.filter;
-        filter.genre = value;
-        this.setState({ filter });
+        [ filter[1], filter[2], filter[3] ] = [ filter1, filter2, filter3 ];
+        this.setState({ filter, loadingFilter: true });
         this.getFilms();
     }
     private async getFilms() {
         const filter = this.state.filter;
-        console.log(filter);
         const query = `query q1{                        viewer(
           accessToken:"d8b1408f130778d35d28872fc9a6984d"){
-            films(limit:${filter.limit}, ${filter.genre ? `genres: {or: [[${filter.genre}]]}` : ""}){
+            films(limit:${filter.limit},genres: {or: [[${filter[1]}], [${filter[2]}], [${filter[3]}]]}){
               name
               id
             }
@@ -82,6 +86,6 @@
           }
         }`;
         const data = await queryToAPI(query);
-        this.setState({ loading: false, data: data.viewer });
+        this.setState({ loading: false, data: data.viewer, loadingFilter: false });
     }
 }
