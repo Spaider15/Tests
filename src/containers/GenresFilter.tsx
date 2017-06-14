@@ -38,16 +38,24 @@ export default class GenresFilter extends React.Component<IProps, IState> {
         <div>
             <p>Выберите жанр:</p>
             {filters}
+            {this.state.filterCount > 1 ? <div>
+                <button onClick={this.removeFilter.bind(this)}>Удалить фильтр</button><br/></div> : ""}
             {this.state.filterCount < 3 ? <button onClick={this.addFilter.bind(this)}>Добавить фильтр</button> : ""}
         </div>
         );
     }
     private setGenreFilter(value: number[], key: number) {
         const filter = { [key] : value };
-        this.setState(filter);
-        this.props.setFilter(this.state[1], this.state[2], this.state[3]);
+        this.setState(filter, () => {
+            this.props.setFilter(this.state[1], this.state[2], this.state[3]);
+        });
     }
     private addFilter(event: React.FormEvent<HTMLButtonElement>) {
         this.setState({ filterCount : this.state.filterCount + 1 });
+    }
+    private removeFilter() {
+        const filterCount = this.state.filterCount;
+        this.setGenreFilter([], filterCount);
+        this.setState({ filterCount : filterCount - 1 });
     }
 }
