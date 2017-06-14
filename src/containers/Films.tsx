@@ -27,9 +27,7 @@
             loadingFilter: false,
             filter: {
                 limit: 10,
-                1: [],
-                2: [],
-                3: [],
+                genres: {},
             },
         };
     }
@@ -65,17 +63,23 @@
     public async componentDidMount() {
         await this.getFilms();
     }
-    private setGenreFilter(filter1: number[], filter2: number[], filter3: number[]) {
+    private setGenreFilter(value: number[], key: number) {
         const filter = this.state.filter;
-        [ filter[1], filter[2], filter[3] ] = [ filter1, filter2, filter3 ];
+        filter.genres[key] = value;
         this.setState({ filter, loadingFilter: true });
         this.getFilms();
     }
     private async getFilms() {
         const filter = this.state.filter;
-        const query = `query q1{                        viewer(
+        let genres: number[][] = [[]];
+        if (Object.keys(filter.genres).length > 0) {
+            genres = Object.keys(filter.genres).map( (key: any) => {
+                return filter.genres[key];
+            });
+        }
+        const query = `query($genres:[[Int]]!) {                        viewer(
           accessToken:"d8b1408f130778d35d28872fc9a6984d"){
-            films(limit:${filter.limit},genres: {or: [[${filter[1]}], [${filter[2]}], [${filter[3]}]]}){
+            films(limit:${filter.limit},genres: {or: $genres}){
               name
               id
             }
@@ -85,7 +89,7 @@
             }
           }
         }`;
-        const data = await queryToAPI(query);
+        const data = await queryToAPI(query, { genres });
         this.setState({ loading: false, data: data.viewer, loadingFilter: false });
     }
 }

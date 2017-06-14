@@ -29,9 +29,9 @@ export interface IFilmsState {
     data?: IData;
     filter: {
         limit: number,
-        1: number[],
-        2: number[],
-        3: number[],
+        genres: {
+            [index: number]: number[],
+        },
     };
 }
 

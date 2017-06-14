@@ -4,15 +4,12 @@ import { IGenre } from "../types";
 import config from "../config";
 
 interface IState {
-  1: number[];
-  2: number[];
-  3: number[];
   filterCount: number;
 }
 
 interface IProps {
     genres?: IGenre[];
-    setFilter: (filter1: number[], filter2: number[], filter3: number[]) => void;
+    setFilter: (value: number[], key: number) => void;
 }
 
 export default class GenresFilter extends React.Component<IProps, IState> {
@@ -20,9 +17,6 @@ export default class GenresFilter extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             filterCount: 1,
-            1: [],
-            2: [],
-            3: [],
         };
     }
     public render() {
@@ -31,7 +25,7 @@ export default class GenresFilter extends React.Component<IProps, IState> {
         for (let i = 1; i <= this.state.filterCount; i++) {
             filters.push(
                 <div key={i}>
-                    <Genres id={i} setFilter={this.setGenreFilter.bind(this)}
+                    <Genres id={i} setFilter={this.props.setFilter.bind(this)}
                             genres={this.props.genres ? this.props.genres : undefined} />
                     <p>Или</p>
                 </div>);
@@ -47,18 +41,12 @@ export default class GenresFilter extends React.Component<IProps, IState> {
         </div>
         );
     }
-    private setGenreFilter(value: number[], key: number) {
-        const filter = { [key] : value };
-        this.setState(filter, () => {
-            this.props.setFilter(this.state[1], this.state[2], this.state[3]);
-        });
-    }
     private addFilter(event: React.FormEvent<HTMLButtonElement>) {
         this.setState({ filterCount : this.state.filterCount + 1 });
     }
     private removeFilter() {
         const filterCount = this.state.filterCount;
-        this.setGenreFilter([], filterCount);
+        this.props.setFilter([], filterCount);
         this.setState({ filterCount : filterCount - 1 });
     }
 }

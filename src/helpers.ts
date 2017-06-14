@@ -1,10 +1,11 @@
 /**
  * Created by ia.busarov on 06.06.2017.
  */
-export async function queryToAPI(query: string) {
+export async function queryToAPI(query: string, variables: {[index: string]: any} = { genres : [[]] }) {
     const res = await fetch("https://api.droptv.org/graphql", {
         body: JSON.stringify({
             query,
+            variables,
         }),
         headers: {
             "Content-Type": "application/json",
@@ -17,7 +18,7 @@ export async function queryToAPI(query: string) {
     }
     const json = await res.json();
     if (json.errors) {
-        throw new Error(json.errors.map((e: any) => e.message).join());
+        console.error(json.errors.map((e: any) => e.message).join());
     }
 
     return json.data;
