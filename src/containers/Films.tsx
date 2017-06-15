@@ -63,9 +63,13 @@
     public async componentDidMount() {
         await this.getFilms();
     }
-    private setGenreFilter(value: number[], key: number) {
+    private setGenreFilter(key: number, value?: number[]) {
         const filter = this.state.filter;
-        filter.genres[key] = value;
+        if (!value) {
+            delete filter.genres[key];
+        } else {
+            filter.genres[key] = value;
+        }
         this.setState({ filter, loadingFilter: true });
         this.getFilms();
     }

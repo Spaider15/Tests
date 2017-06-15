@@ -3,7 +3,7 @@ import { IGenre } from "../types";
 
 interface IProps {
     genres?: IGenre[];
-    setFilter: (value: number[], key: number) => void;
+    setFilter: (key: number, value: number[]) => void;
     id: number;
 }
 
@@ -38,6 +38,6 @@ export default class Genres extends React.Component<IProps, {}> {
         if (values.length < 1) {
             return;
         }
-        this.props.setFilter(values, this.props.id);
+        this.props.setFilter(this.props.id, values);
     }
 }

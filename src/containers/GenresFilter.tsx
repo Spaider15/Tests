@@ -9,7 +9,7 @@ interface IState {
 
 interface IProps {
     genres?: IGenre[];
-    setFilter: (value: number[], key: number) => void;
+    setFilter: (key: number, value?: number[]) => void;
 }
 
 export default class GenresFilter extends React.Component<IProps, IState> {
@@ -46,7 +46,7 @@ export default class GenresFilter extends React.Component<IProps, IState> {
     }
     private removeFilter() {
         const filterCount = this.state.filterCount;
-        this.props.setFilter([], filterCount);
+        this.props.setFilter(filterCount);
         this.setState({ filterCount : filterCount - 1 });
     }
 }
