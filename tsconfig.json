@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "build/dist",
+    "outDir": "./build/dist",
     "module": "commonjs",
     "target": "es5",
     "lib": ["es6", "dom"],
@@ -15,7 +15,7 @@
     "strictNullChecks": true
   },
   "exclude": [
-    "node_modules",
+    "./node_modules",
     "build",
     "scripts",
     "acceptance-tests",

@@ -1,29 +1,29 @@
- import * as React from "react";
- import {
-    Link,
-    Route,
-} from "react-router-dom";
- import FilmsView from "../components/FilmsView";
- import GenresFilter from "../containers/GenresFilter";
- import { queryToAPI } from "../helpers";
- import { IFilmsState } from "../types";
- import FilmItem from "./FilmItem";
+import * as React from "react";
+import FilmsView from "../components/FilmsView";
+import GenresFilter from "../containers/GenresFilter";
+import {queryToAPI} from "../helpers";
+import {IFilmsState} from "../types";
+import FilmItem from "./FilmItem";
 
- const styles = {
-     filmsList: {
-       float: "left",
-     },
-     filter: {
+const styles = {
+    main: {
+        display: "flex",
+        flexDirection: "row" as "row",
+    },
+    filter: {
         marginLeft: "50px",
-        float: "left",
-     },
- };
+    },
+};
 
- export default class Films extends React.Component<{}, IFilmsState> {
+interface IProps {
+    maximumCountGroupsOfGenres: number;
+}
+
+export default class Films extends React.Component<IProps, IFilmsState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            loading : true,
+            loading: true,
             loadingFilter: false,
             filter: {
                 limit: 10,
@@ -34,35 +34,33 @@
 
     public render() {
         if (this.state.loading) {
-            return (<Route exact path="/" render={() => (<h1>Loading...</h1>)}/>);
+            return (<h1>Loading...</h1>);
         }
         if (this.state.data) {
             return (
-                    <div>
-                        <Route exact path="/" key="main" render={() => (
-                            <div>
-                                <div style={styles.filmsList}>
-                                    <h2>Список фильмов:</h2>
-                                    {this.state.loadingFilter ? <h3>Loading...</h3> :
-                                        <FilmsView data={this.state.data} />}
-                                </div>
-                                <div style={styles.filter}>
-                                    <h2>Фильтр:</h2>
-                                    <GenresFilter setFilter={this.setGenreFilter.bind(this)}
-                                                  genres={this.state.data ? this.state.data.genres : undefined} />
-                                </div>
-                            </div>
-                        )}/>
-                        <Route path="/film/:filmId" key="film" component={FilmItem}/>
+                    <div style={styles.main}>
+                        <div>
+                            <h2>Список фильмов:</h2>
+                            {this.state.loadingFilter ? <h3>Loading...</h3> :
+                                <FilmsView data={this.state.data}/>}
+                        </div>
+                        <div style={styles.filter}>
+                            <h2>Фильтр:</h2>
+                            <GenresFilter setFilter={this.setGenreFilter.bind(this)}
+                                          maximumCountGroupsOfGenres={this.props.maximumCountGroupsOfGenres}
+                                          genres={this.state.data ? this.state.data.genres : undefined}/>
+                        </div>
                     </div>
             );
         } else {
-            return (<Route exact path="/" render={() => (<h1>data is empty</h1>)}/>);
+            return (<h1>data is empty</h1>);
         }
     }
+
     public async componentDidMount() {
         await this.getFilms();
     }
+
     private setGenreFilter(key: number, value?: number[]) {
         const filter = this.state.filter;
         if (!value) {
@@ -70,14 +68,15 @@
         } else {
             filter.genres[key] = value;
         }
-        this.setState({ filter, loadingFilter: true });
+        this.setState({filter, loadingFilter: true});
         this.getFilms();
     }
+
     private async getFilms() {
         const filter = this.state.filter;
         let genres: number[][] = [[]];
         if (Object.keys(filter.genres).length > 0) {
-            genres = Object.keys(filter.genres).map( (key: any) => {
+            genres = Object.keys(filter.genres).map((key: any) => {
                 return filter.genres[key];
             });
         }
@@ -93,7 +92,7 @@
             }
           }
         }`;
-        const data = await queryToAPI(query, { genres });
-        this.setState({ loading: false, data: data.viewer, loadingFilter: false });
+        const data = await queryToAPI(query, {genres});
+        this.setState({loading: false, data: data.viewer, loadingFilter: false});
     }
 }

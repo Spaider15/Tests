@@ -2,7 +2,7 @@ import * as React from "react";
 import {
     HashRouter as Router,
 } from "react-router-dom";
-import Films from "./containers/Films";
+import Main from "./containers/Main";
 
 export default class App extends React.Component<{}, {}> {
     constructor(props: any) {
@@ -11,7 +11,7 @@ export default class App extends React.Component<{}, {}> {
     public render() {
         return(
             <Router>
-                <Films />
+                <Main />
             </Router>
         );
     }

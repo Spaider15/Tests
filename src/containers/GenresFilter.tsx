@@ -10,6 +10,7 @@ interface IState {
 interface IProps {
     genres?: IGenre[];
     setFilter: (key: number, value?: number[]) => void;
+    maximumCountGroupsOfGenres: number;
 }
 
 export default class GenresFilter extends React.Component<IProps, IState> {
@@ -20,7 +21,6 @@ export default class GenresFilter extends React.Component<IProps, IState> {
         };
     }
     public render() {
-        const maximumCountGroupsOfGenres = config.maximumCountGroupsOfGenres;
         const filters = [];
         for (let i = 1; i <= this.state.filterCount; i++) {
             filters.push(
@@ -36,7 +36,7 @@ export default class GenresFilter extends React.Component<IProps, IState> {
             {filters}
             {this.state.filterCount > 1 ? <div>
                 <button onClick={this.removeFilter.bind(this)}>Удалить фильтр</button><br/></div> : ""}
-            {this.state.filterCount < maximumCountGroupsOfGenres ?
+            {this.state.filterCount < this.props.maximumCountGroupsOfGenres ?
                 <button onClick={this.addFilter.bind(this)}>Добавить фильтр</button> : ""}
         </div>
         );
